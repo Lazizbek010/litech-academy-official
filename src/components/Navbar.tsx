@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, GraduationCap } from 'lucide-react';
+import { Menu, X, GraduationCap, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -16,17 +19,32 @@ const Navbar = () => {
   }, []);
 
   const navItems = [
-    { name: 'Home', href: '#hero' },
-    { name: 'Courses', href: '#courses' },
-    { name: 'Teachers', href: '#teachers' },
-    { name: 'Graduates', href: '#graduates' },
-    { name: 'Testimonials', href: '#testimonials' },
-    { name: 'Contact', href: '#contact' },
+    { name: 'Home', href: '/' },
+    { name: 'Courses', href: '/#courses' },
+    { name: 'Teachers', href: '/#teachers' },
+    { name: 'Graduates', href: '/#graduates' },
+    { name: 'Testimonials', href: '/#testimonials' },
+    { name: 'Blog', href: '/blog' },
+    { name: 'Contact', href: '/#contact' },
   ];
 
   const handleNavClick = (href: string) => {
-    const element = document.querySelector(href);
-    element?.scrollIntoView({ behavior: 'smooth' });
+    if (href.startsWith('/#')) {
+      if (location.pathname !== '/') {
+        navigate('/');
+        setTimeout(() => {
+          const element = document.querySelector(href.substring(1));
+          element?.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      } else {
+        const element = document.querySelector(href.substring(1));
+        element?.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else if (href === '/') {
+      navigate('/');
+    } else {
+      navigate(href);
+    }
     setIsMobileMenuOpen(false);
   };
 
@@ -60,8 +78,15 @@ const Navbar = () => {
                 {item.name}
               </button>
             ))}
+            <a 
+              href="tel:+998901234567" 
+              className="flex items-center gap-2 text-primary hover:text-primary-dark transition-colors font-medium"
+            >
+              <Phone className="h-4 w-4" />
+              <span>+998 90 123 45 67</span>
+            </a>
             <Button 
-              onClick={() => handleNavClick('#registration')}
+              onClick={() => handleNavClick('/#registration')}
               className="bg-gradient-primary hover:opacity-90"
             >
               Register Now
@@ -101,8 +126,15 @@ const Navbar = () => {
                   {item.name}
                 </button>
               ))}
+              <a 
+                href="tel:+998901234567" 
+                className="flex items-center gap-2 text-primary hover:text-primary-dark transition-colors font-medium py-3"
+              >
+                <Phone className="h-4 w-4" />
+                <span>+998 90 123 45 67</span>
+              </a>
               <Button 
-                onClick={() => handleNavClick('#registration')}
+                onClick={() => handleNavClick('/#registration')}
                 className="w-full mt-4 bg-gradient-primary hover:opacity-90"
               >
                 Register Now

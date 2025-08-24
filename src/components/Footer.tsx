@@ -1,13 +1,18 @@
 import { GraduationCap, Facebook, Instagram, Send, Youtube } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 const Footer = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  
   const quickLinks = [
-    { name: 'Home', href: '#hero' },
-    { name: 'Courses', href: '#courses' },
-    { name: 'About Us', href: '#teachers' },
-    { name: 'Contact', href: '#contact' },
+    { name: 'Home', href: '/' },
+    { name: 'Courses', href: '/#courses' },
+    { name: 'About Us', href: '/#teachers' },
+    { name: 'Blog', href: '/blog' },
+    { name: 'Contact', href: '/#contact' },
   ];
 
   const courses = [
@@ -25,8 +30,22 @@ const Footer = () => {
   ];
 
   const handleNavClick = (href: string) => {
-    const element = document.querySelector(href);
-    element?.scrollIntoView({ behavior: 'smooth' });
+    if (href.startsWith('/#')) {
+      if (location.pathname !== '/') {
+        navigate('/');
+        setTimeout(() => {
+          const element = document.querySelector(href.substring(1));
+          element?.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      } else {
+        const element = document.querySelector(href.substring(1));
+        element?.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else if (href === '/') {
+      navigate('/');
+    } else {
+      navigate(href);
+    }
   };
 
   return (
